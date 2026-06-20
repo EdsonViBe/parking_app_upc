@@ -1,0 +1,55 @@
+<div class="reservations-page">
+  <div class="page-header">
+    <div class="container">
+      <h1>Mis Reservas</h1>
+      <p>Gestiona tus reservas de estacionamiento</p>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="tabs">
+      @for (tab of ['todas','activas','historial']; track tab) {
+        <button [class.active]="activeTab === tab" (click)="activeTab = $any(tab)">
+          {{ tab | titlecase }}
+        </button>
+      }
+    </div>
+
+    @if (filtered.length === 0) {
+      <div class="empty-state">
+        <span>📋</span>
+        <h3>No hay reservas aquí</h3>
+        <p>Aún no tienes reservas en esta categoría</p>
+        <a routerLink="/buscar" class="btn btn-primary">Buscar estacionamiento</a>
+      </div>
+    } @else {
+      <div class="reservations-list">
+        @for (r of filtered; track r.id) {
+          <div class="reservation-card" [class.cancelled]="r.status === 'cancelada'">
+            <div class="res-header">
+              <div class="res-parking-icon">🅿️</div>
+              <div class="res-info">
+                <strong>{{ r.parkingTitle }}</strong>
+                <span>📍 {{ r.parkingAddress }}</span>
+              </div>
+              <span class="badge" [ngClass]="statusClass(r.status)">{{ statusLabel(r.status) }}</span>
+            </div>
+            <div class="res-details">
+              <div class="res-detail"><span>📅</span><strong>{{ r.date }}</strong></div>
+              <div class="res-detail"><span>🕐</span><strong>{{ r.startTime }} – {{ r.endTime }}</strong></div>
+              <div class="res-detail"><span>⏱</span><strong>{{ r.hours }}h</strong></div>
+              <div class="res-detail"><span>🚗</span><strong>{{ r.vehiclePlate | uppercase }}</strong></div>
+              <div class="res-detail"><span>💳</span><strong>S/ {{ r.totalPrice.toFixed(2) }}</strong></div>
+              <div class="res-detail"><span>#</span><strong>{{ r.id }}</strong></div>
+            </div>
+            @if (r.status === 'confirmada' || r.status === 'pendiente') {
+              <div class="res-actions">
+                <button class="btn btn-danger btn-sm" (click)="cancel(r.id)">Cancelar reserva</button>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>

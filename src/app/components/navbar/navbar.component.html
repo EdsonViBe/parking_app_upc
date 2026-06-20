@@ -1,0 +1,35 @@
+<nav class="navbar">
+  <div class="container nav-inner">
+    <a routerLink="/" class="nav-logo">
+      <span class="logo-icon">🅿</span>
+      <span class="logo-text">Parking<strong>App</strong> <small class="v2-tag">V2</small></span>
+    </a>
+
+    <div class="nav-links" [class.open]="menuOpen">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" (click)="menuOpen=false">Inicio</a>
+      @if (!currentUser || currentUser.role === 'conductor') {
+        <a routerLink="/buscar" routerLinkActive="active" (click)="menuOpen=false">Buscar</a>
+      }
+      @if (currentUser) {
+        @if (currentUser.role === 'propietario') {
+          <a routerLink="/dashboard-propietario" routerLinkActive="active" (click)="menuOpen=false">Mi Cochera</a>
+        }
+        @if (currentUser.role === 'conductor') {
+          <a routerLink="/mis-reservas" routerLinkActive="active" (click)="menuOpen=false">Mis Reservas</a>
+        }
+        <div class="nav-user">
+          <span class="user-avatar">{{ currentUser.name[0] }}</span>
+          <span class="user-name">{{ currentUser.name.split(' ')[0] }}</span>
+          <button class="btn btn-sm btn-outline" (click)="logout()">Salir</button>
+        </div>
+      } @else {
+        <a routerLink="/login" class="btn btn-outline btn-sm" (click)="menuOpen=false">Ingresar</a>
+        <a routerLink="/registro" class="btn btn-primary btn-sm" (click)="menuOpen=false">Registrarse</a>
+      }
+    </div>
+
+    <button class="hamburger" (click)="toggleMenu()" [class.active]="menuOpen">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>

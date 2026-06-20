@@ -1,0 +1,43 @@
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-logo"><span>🅿</span><strong>ParkingApp V2</strong></div>
+    <h1>Crear cuenta</h1>
+    <p class="auth-sub">Únete a la comunidad de estacionamiento colaborativo</p>
+
+    <div class="role-selector">
+      <button [class.active]="form.role === 'conductor'" (click)="form.role = 'conductor'; onFieldChange()">🚗 Soy Conductor</button>
+      <button [class.active]="form.role === 'propietario'" (click)="form.role = 'propietario'; onFieldChange()">🏠 Soy Propietario</button>
+    </div>
+
+    @if (restoredFromCookie) {
+      <div class="alert alert-info">🍪 Recuperamos los datos que habías ingresado antes.</div>
+    }
+    @if (error) { <div class="alert alert-error">{{ error }}</div> }
+
+    <div class="form-group">
+      <label class="form-label">Nombre completo *</label>
+      <input type="text" class="form-control" [(ngModel)]="form.name" (ngModelChange)="onFieldChange()" placeholder="Ej: Luis Gutiérrez" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Correo electrónico *</label>
+      <input type="email" class="form-control" [(ngModel)]="form.email" (ngModelChange)="onFieldChange()" placeholder="tucorreo@ejemplo.com" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Teléfono</label>
+      <input type="tel" class="form-control" [(ngModel)]="form.phone" (ngModelChange)="onFieldChange()" placeholder="9XXXXXXXX" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Contraseña *</label>
+      <input type="password" class="form-control" [(ngModel)]="form.password" placeholder="Mínimo 6 caracteres" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Confirmar contraseña *</label>
+      <input type="password" class="form-control" [(ngModel)]="form.confirmPassword" placeholder="Repite tu contraseña" />
+    </div>
+
+    <button class="btn btn-primary btn-full btn-lg" (click)="register()" [disabled]="loading">
+      {{ loading ? 'Creando cuenta...' : 'Crear cuenta gratis' }}
+    </button>
+    <p class="auth-link">¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión</a></p>
+  </div>
+</div>

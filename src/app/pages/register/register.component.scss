@@ -1,0 +1,12 @@
+.auth-page { min-height: 80vh; display: flex; align-items: center; justify-content: center; padding: 40px 20px; }
+.auth-card { background: white; border-radius: var(--radius-xl); padding: 40px; box-shadow: var(--shadow-xl); width: 100%; max-width: 440px; }
+.auth-logo { display: flex; align-items: center; gap: 8px; font-size: 1.2rem; margin-bottom: 20px; justify-content: center; }
+.auth-logo span { background: var(--primary); color: white; width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+.auth-logo strong { color: var(--primary); }
+.auth-card h1 { font-size: 1.5rem; font-weight: 800; text-align: center; margin-bottom: 6px; }
+.auth-sub { text-align: center; color: var(--gray-500); font-size: 0.875rem; margin-bottom: 20px; }
+.role-selector { display: flex; gap: 0; margin-bottom: 20px; border: 1.5px solid var(--gray-200); border-radius: var(--radius); overflow: hidden; }
+.role-selector button { flex: 1; padding: 10px; border: none; background: white; font-family: inherit; font-size: 0.875rem; font-weight: 500; cursor: pointer; transition: var(--transition); }
+.role-selector button.active { background: var(--primary); color: white; font-weight: 700; }
+.auth-link { text-align: center; font-size: 0.875rem; color: var(--gray-500); margin-top: 16px; }
+.auth-link a { color: var(--primary); font-weight: 600; }

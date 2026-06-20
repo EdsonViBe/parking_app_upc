@@ -1,0 +1,175 @@
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-content">
+      <span class="hero-badge">🏙️ Lima, Perú</span>
+      <h1>Encuentra estacionamiento<br><span class="highlight">seguro y rápido</span></h1>
+      <p>Conectamos conductores con propietarios de cocheras privadas. Reserva en segundos, estaciona sin estrés.</p>
+      <div class="search-box">
+        <div class="search-input-wrapper">
+          <span class="search-icon">📍</span>
+          <input
+            type="text"
+            [(ngModel)]="searchQuery"
+            placeholder="¿Dónde necesitas estacionar? (ej: Miraflores, San Isidro...)"
+            class="search-input"
+            (keyup.enter)="search()"
+            (focus)="onSearchFocus()"
+            [readonly]="!isLoggedIn || isOwner"
+          />
+        </div>
+        <button class="btn btn-primary btn-lg" (click)="search()">Buscar</button>
+      </div>
+      @if (showLoginPrompt) {
+        <div class="login-prompt">
+          🔒 Debes iniciar sesión para buscar estacionamientos.
+          <a (click)="goToLogin()">Iniciar sesión</a> ·
+          <a routerLink="/registro">Crear cuenta</a>
+        </div>
+      }
+      @if (showOwnerBlockPrompt) {
+        <div class="login-prompt owner-prompt">
+          🏠 Tu cuenta es de <strong>propietario</strong>. La búsqueda de cocheras es exclusiva para conductores.
+          <a (click)="goToOwnerDashboard()">Ir a Mi Cochera</a>
+        </div>
+      }
+      <div class="quick-filters">
+        <span>Búsquedas populares:</span>
+        @if (isLoggedIn && !isOwner) {
+          <a routerLink="/buscar" [queryParams]="{q:'Miraflores'}">Miraflores</a>
+          <a routerLink="/buscar" [queryParams]="{q:'San Isidro'}">San Isidro</a>
+          <a routerLink="/buscar" [queryParams]="{q:'Barranco'}">Barranco</a>
+          <a routerLink="/buscar" [queryParams]="{q:'aeropuerto'}">Aeropuerto</a>
+        } @else if (isOwner) {
+          <a (click)="goToOwnerDashboard()">Miraflores</a>
+          <a (click)="goToOwnerDashboard()">San Isidro</a>
+          <a (click)="goToOwnerDashboard()">Barranco</a>
+          <a (click)="goToOwnerDashboard()">Aeropuerto</a>
+        } @else {
+          <a (click)="goToLogin()">Miraflores</a>
+          <a (click)="goToLogin()">San Isidro</a>
+          <a (click)="goToLogin()">Barranco</a>
+          <a (click)="goToLogin()">Aeropuerto</a>
+        }
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="map-preview">
+        <div class="map-pin" style="top:30%;left:45%">🅿️</div>
+        <div class="map-pin" style="top:55%;left:30%">🅿️</div>
+        <div class="map-pin" style="top:40%;left:65%">🅿️</div>
+        <div class="map-pin animated" style="top:20%;left:55%">🅿️</div>
+        <div class="map-grid"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats-bar">
+  <div class="container">
+    <div class="stats-grid">
+      @for (stat of stats; track stat.label) {
+        <div class="stat-item">
+          <span class="stat-icon">{{ stat.icon }}</span>
+          <strong>{{ stat.value }}</strong>
+          <span>{{ stat.label }}</span>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- COMO FUNCIONA -->
+<section class="section how-it-works">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">¿Cómo funciona?</h2>
+      <p class="section-subtitle">Reserva tu estacionamiento en 4 pasos simples</p>
+    </div>
+    <div class="steps-grid">
+      @for (step of howItWorks; track step.step) {
+        <div class="step-card">
+          <div class="step-number">{{ step.step }}</div>
+          <div class="step-icon">{{ step.icon }}</div>
+          <h3>{{ step.title }}</h3>
+          <p>{{ step.desc }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- ESPACIOS DESTACADOS -->
+<section class="section featured-section">
+  <div class="container">
+    <div class="section-header-row">
+      <div>
+        <h2 class="section-title">Espacios destacados</h2>
+        <p class="section-subtitle">Los mejor calificados por nuestra comunidad</p>
+      </div>
+      <a routerLink="/buscar" class="btn btn-outline">Ver todos →</a>
+    </div>
+    <div class="grid-3">
+      @for (space of featured; track space.id) {
+        <div class="parking-card" (click)="(isLoggedIn && !isOwner) ? null : (isOwner ? goToOwnerDashboard() : goToLogin())" [routerLink]="(isLoggedIn && !isOwner) ? ['/parking', space.id] : null">
+          <div class="parking-card-image">
+            <div class="icon-placeholder">🅿️</div>
+            <div class="card-badge" [class.green]="space.available" [class.red]="!space.available">
+              {{ space.available ? 'Disponible' : 'Lleno' }}
+            </div>
+          </div>
+          <div class="parking-card-body">
+            <div class="parking-card-title">{{ space.title }}</div>
+            <div class="parking-card-address">📍 {{ space.address }}, {{ space.district }}</div>
+            <div class="parking-card-meta">
+              <span class="badge badge-info">{{ space.type | titlecase }}</span>
+              @for (v of space.vehicleTypes; track v) {
+                <span class="badge badge-success">{{ v }}</span>
+              }
+            </div>
+            <div class="rating">
+              <span class="stars">★★★★★</span>
+              <span class="rating-number">{{ space.rating }}</span>
+              <span class="rating-count">({{ space.reviews }})</span>
+            </div>
+            <div class="parking-card-footer">
+              <div class="price-tag">S/ {{ space.price }}<span>/hora</span></div>
+              @if (isLoggedIn && !isOwner) {
+                <button class="btn btn-primary btn-sm">Reservar</button>
+              } @else if (isOwner) {
+                <button class="btn btn-primary btn-sm" (click)="$event.stopPropagation(); goToOwnerDashboard()">🏠 Solo conductores</button>
+              } @else {
+                <button class="btn btn-primary btn-sm" (click)="$event.stopPropagation(); goToLogin()">🔒 Reservar</button>
+              }
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- CTA PROPIETARIOS -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-card">
+      <div class="cta-content">
+        <span class="cta-emoji">🏠</span>
+        <h2>¿Tienes una cochera vacía?</h2>
+        <p>Gana dinero extra arrendando tu espacio de estacionamiento. Tú pones el precio y los horarios. Nosotros gestionamos todo.</p>
+        @if (isOwner) {
+          <a routerLink="/dashboard-propietario" class="btn btn-primary btn-lg">Ir a Mi Cochera →</a>
+        } @else {
+          <a routerLink="/registro" class="btn btn-primary btn-lg">Publicar mi cochera gratis</a>
+        }
+      </div>
+      <div class="cta-benefits">
+        <div class="benefit">✅ Registro completamente gratuito</div>
+        <div class="benefit">✅ Tú controlas precios y disponibilidad</div>
+        <div class="benefit">✅ Pago seguro garantizado</div>
+        <div class="benefit">✅ Soporte 7 días a la semana</div>
+      </div>
+    </div>
+  </div>
+</section>

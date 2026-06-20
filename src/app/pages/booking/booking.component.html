@@ -1,0 +1,107 @@
+<div class="booking-page">
+  <div class="container">
+    <a [routerLink]="['/parking', space?.id]" class="back-link">← Volver al detalle</a>
+
+    @if (submitted) {
+      <div class="success-screen">
+        <div class="success-icon">✅</div>
+        <h2>¡Reserva confirmada!</h2>
+        <p>Tu espacio en <strong>{{ space?.title }}</strong> ha sido reservado exitosamente.</p>
+        <div class="success-details">
+          <div class="s-row"><span>📅 Fecha</span><strong>{{ form.date }}</strong></div>
+          <div class="s-row"><span>🕐 Horario</span><strong>{{ form.startTime }} – {{ form.endTime }}</strong></div>
+          <div class="s-row"><span>🚗 Vehículo</span><strong>{{ form.vehiclePlate | uppercase }}</strong></div>
+          <div class="s-row"><span>💳 Total pagado</span><strong>S/ {{ totalPrice.toFixed(2) }}</strong></div>
+        </div>
+        <div class="success-actions">
+          <a routerLink="/mis-reservas" class="btn btn-primary">Ver mis reservas</a>
+          <a routerLink="/buscar" class="btn btn-outline">Buscar más espacios</a>
+        </div>
+      </div>
+    } @else {
+      <div class="booking-grid">
+        <div class="booking-form">
+          <h1>Confirmar reserva</h1>
+          @if (restoredFromCookie) {
+            <div class="alert alert-info">🍪 Recuperamos los datos que habías ingresado en esta reserva.</div>
+          }
+          @if (error) { <div class="alert alert-error">{{ error }}</div> }
+
+          <div class="form-section">
+            <h3>📅 Fecha y horario</h3>
+            <div class="form-group">
+              <label class="form-label">Fecha de reserva</label>
+              <input type="date" class="form-control" [(ngModel)]="form.date" (ngModelChange)="onFieldChange()" [min]="minDate" />
+            </div>
+            <div class="time-row">
+              <div class="form-group">
+                <label class="form-label">Hora de entrada</label>
+                <input type="time" class="form-control" [(ngModel)]="form.startTime" (ngModelChange)="onFieldChange()" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Hora de salida</label>
+                <input type="time" class="form-control" [(ngModel)]="form.endTime" (ngModelChange)="onFieldChange()" />
+              </div>
+            </div>
+            @if (hours > 0) {
+              <div class="duration-pill">⏱ {{ hours }} hora{{ hours !== 1 ? 's' : '' }} de estacionamiento</div>
+            }
+          </div>
+
+          <div class="form-section">
+            <h3>🚗 Vehículo</h3>
+            <div class="form-group">
+              <label class="form-label">Tipo de vehículo</label>
+              <select class="form-control" [(ngModel)]="form.vehicleType" (ngModelChange)="onFieldChange()">
+                <option value="auto">Automóvil</option>
+                <option value="moto">Motocicleta</option>
+                <option value="bicicleta">Bicicleta</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Placa del vehículo</label>
+              <input type="text" class="form-control" [(ngModel)]="form.vehiclePlate" (ngModelChange)="onFieldChange()" placeholder="Ej: ABC-123" maxlength="8" style="text-transform:uppercase" />
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3>💳 Método de pago</h3>
+            <div class="payment-options">
+              @for (pm of [{v:'tarjeta',l:'💳 Tarjeta de crédito/débito'},{v:'yape',l:'📱 Yape'},{v:'plin',l:'📱 Plin'},{v:'efectivo',l:'💵 Efectivo en llegada'}]; track pm.v) {
+                <label class="payment-option" [class.selected]="form.paymentMethod === pm.v">
+                  <input type="radio" [(ngModel)]="form.paymentMethod" [value]="pm.v" (ngModelChange)="onFieldChange()" />
+                  {{ pm.l }}
+                </label>
+              }
+            </div>
+          </div>
+        </div>
+
+        <div class="booking-summary">
+          <div class="summary-card">
+            <h3>Resumen de reserva</h3>
+            @if (space) {
+              <div class="summary-parking">
+                <div class="parking-thumb">🅿️</div>
+                <div>
+                  <strong>{{ space.title }}</strong>
+                  <p>{{ space.address }}, {{ space.district }}</p>
+                </div>
+              </div>
+              <div class="summary-rows">
+                <div class="sum-row"><span>Precio por hora</span><span>S/ {{ space.price }}</span></div>
+                <div class="sum-row"><span>Horas</span><span>× {{ hours }}</span></div>
+                <div class="sum-row"><span>Comisión de servicio</span><span>S/ 0.00</span></div>
+                <div class="sum-row total"><span>Total</span><span>S/ {{ totalPrice.toFixed(2) }}</span></div>
+              </div>
+              <button class="btn btn-primary btn-full btn-lg" (click)="confirm()" [disabled]="loading || hours <= 0">
+                {{ loading ? 'Procesando...' : '✓ Confirmar y pagar S/ ' + totalPrice.toFixed(2) }}
+              </button>
+              <p class="safe-payment">🔒 Pago 100% seguro · Cancela gratis hasta 1h antes</p>
+            }
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

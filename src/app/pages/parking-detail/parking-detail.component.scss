@@ -1,0 +1,55 @@
+.detail-hero { background: var(--gray-900); color: white; padding: 24px 0; }
+.back-link { color: rgba(255,255,255,.7); font-size: 0.875rem; display: inline-block; margin-bottom: 16px; transition: var(--transition); }
+.back-link:hover { color: white; }
+.detail-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; }
+.detail-header h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 6px; }
+.detail-location { color: rgba(255,255,255,.7); font-size: 0.9rem; margin-bottom: 10px; }
+.detail-meta { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.detail-price { text-align: right; }
+.big-price { font-size: 2rem; font-weight: 800; }
+.price-unit { font-size: 0.85rem; opacity: .7; display: block; }
+.day-price { font-size: 0.9rem; opacity: .8; background: rgba(255,255,255,.1); padding: 4px 10px; border-radius: 20px; display: inline-block; margin-top: 6px; }
+.detail-body { display: grid; grid-template-columns: 1fr 320px; gap: 32px; padding: 32px 20px; }
+.detail-section { margin-bottom: 32px; padding-bottom: 32px; border-bottom: 1px solid var(--gray-100); }
+.detail-section:last-child { border-bottom: none; }
+.detail-section h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; }
+.space-visual { height: 240px; background: linear-gradient(135deg, #1e3a8a, #7c3aed); border-radius: var(--radius-xl); display: flex; align-items: center; justify-content: center; margin-bottom: 32px; color: white; text-align: center; }
+.visual-placeholder span { font-size: 4rem; display: block; margin-bottom: 8px; }
+.visual-placeholder p { font-size: 1.1rem; font-weight: 700; }
+.visual-placeholder small { opacity: .7; }
+.features-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 12px; }
+.feature-item { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; color: var(--gray-700); }
+.feature-check { color: var(--secondary); font-weight: 700; }
+.vehicle-types { display: flex; gap: 12px; flex-wrap: wrap; }
+.vehicle-badge { background: var(--gray-100); padding: 8px 16px; border-radius: var(--radius); font-size: 0.9rem; font-weight: 500; }
+.schedule { font-size: 1rem; color: var(--gray-700); background: var(--gray-50); padding: 12px 16px; border-radius: var(--radius); }
+.spots-visual { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+.spot { font-size: 1.5rem; }
+.spot.occupied { opacity: .4; }
+.spots-label { font-size: 0.875rem; color: var(--gray-500); }
+.reviews-list { display: flex; flex-direction: column; gap: 16px; }
+.review-card { background: var(--gray-50); border-radius: var(--radius-lg); padding: 16px; }
+.review-header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.review-avatar { width: 36px; height: 36px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0; }
+.review-meta { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; }
+.review-date { color: var(--gray-400); }
+.review-card p { font-size: 0.9rem; color: var(--gray-600); }
+.booking-sidebar { position: sticky; top: 80px; height: fit-content; }
+.booking-card { background: white; border-radius: var(--radius-xl); padding: 24px; box-shadow: var(--shadow-lg); margin-bottom: 16px; }
+.booking-price { font-size: 1.5rem; font-weight: 800; color: var(--gray-900); margin-bottom: 20px; }
+.booking-price span { font-size: 1rem; font-weight: 400; color: var(--gray-400); }
+.booking-info { margin-bottom: 20px; }
+.info-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--gray-100); font-size: 0.875rem; color: var(--gray-600); }
+.info-row:last-child { border-bottom: none; }
+.booking-note { text-align: center; font-size: 0.8rem; color: var(--gray-500); margin-top: 12px; }
+.owner-card { background: white; border-radius: var(--radius-xl); padding: 16px; box-shadow: var(--shadow); display: flex; align-items: center; gap: 12px; }
+.owner-avatar { width: 40px; height: 40px; background: var(--secondary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1rem; flex-shrink: 0; }
+.owner-card strong { display: block; font-size: 0.9rem; }
+.owner-card p { font-size: 0.8rem; color: var(--secondary); margin-top: 2px; }
+.not-found { text-align: center; padding: 80px 20px; }
+@media (max-width: 900px) {
+  .detail-body { grid-template-columns: 1fr; }
+  .booking-sidebar { position: static; }
+  .detail-header { flex-direction: column; }
+  .features-grid { grid-template-columns: 1fr; }
+}

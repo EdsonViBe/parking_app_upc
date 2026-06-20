@@ -1,0 +1,138 @@
+<div class="search-page">
+  <div class="search-header">
+    <div class="container">
+      <h1>Buscar estacionamiento</h1>
+      <div class="main-search">
+        <input type="text" [(ngModel)]="filters.query" placeholder="¿Dónde necesitas estacionar?" class="form-control search-big" (keyup.enter)="onFiltersChange()" />
+        <button class="btn btn-primary" (click)="onFiltersChange()">🔍 Buscar</button>
+      </div>
+      @if (restoredFromCookie) {
+        <p class="cookie-notice">🍪 Restauramos tus últimos filtros de búsqueda</p>
+      }
+    </div>
+  </div>
+
+  <div class="container search-layout">
+    <!-- FILTROS -->
+    <aside class="filters-panel">
+      <div class="filters-header">
+        <h3>Filtros</h3>
+        <button class="btn-link" (click)="clearFilters()">Limpiar</button>
+      </div>
+
+      <div class="filter-group">
+        <label class="form-label">Tipo de vehículo</label>
+        <select class="form-control" [(ngModel)]="filters.vehicleType" (change)="onFiltersChange()">
+          <option value="">Todos</option>
+          <option value="auto">Automóvil</option>
+          <option value="moto">Motocicleta</option>
+          <option value="bicicleta">Bicicleta</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label class="form-label">Tipo de espacio</label>
+        <select class="form-control" [(ngModel)]="filters.type" (change)="onFiltersChange()">
+          <option value="">Todos</option>
+          <option value="cubierto">Cubierto / Techado</option>
+          <option value="descubierto">Descubierto</option>
+          <option value="mixto">Mixto</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label class="form-label">Distrito</label>
+        <select class="form-control" [(ngModel)]="filters.district" (change)="onFiltersChange()">
+          <option value="">Todos</option>
+          @for (d of districts; track d) {
+            <option [value]="d">{{ d }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label class="form-label">Precio máximo: S/ {{ filters.maxPrice }}/hora</label>
+        <input type="range" min="1" max="20" step="0.5" [(ngModel)]="filters.maxPrice" (change)="onFiltersChange()" class="range-input" />
+        <div class="range-labels"><span>S/ 1</span><span>S/ 20</span></div>
+      </div>
+
+      <div class="filter-group">
+        <label class="form-label">Calificación mínima</label>
+        <div class="rating-buttons">
+          @for (r of [0, 3, 4, 4.5]; track r) {
+            <button [class.active]="filters.minRating === r" (click)="filters.minRating=r; onFiltersChange()" class="rating-btn">
+              {{ r === 0 ? 'Todos' : '★ ' + r + '+' }}
+            </button>
+          }
+        </div>
+      </div>
+    </aside>
+
+    <!-- RESULTADOS -->
+    <div class="results-area">
+      <div class="results-header">
+        <span class="results-count">{{ results.length }} espacio{{ results.length !== 1 ? 's' : '' }} encontrado{{ results.length !== 1 ? 's' : '' }}</span>
+        <div class="sort-control">
+          <label>Ordenar por:</label>
+          <select [(ngModel)]="sortBy" (change)="onSortChange()" class="form-control sort-select">
+            <option value="rating">Mejor calificados</option>
+            <option value="price">Menor precio</option>
+          </select>
+        </div>
+      </div>
+
+      @if (loading) {
+        <div class="loading"><div class="spinner"></div> Buscando espacios...</div>
+      } @else if (results.length === 0) {
+        <div class="no-results">
+          <span>😔</span>
+          <h3>No encontramos espacios disponibles</h3>
+          <p>Intenta con otros filtros o una ubicación diferente</p>
+          <button class="btn btn-outline" (click)="clearFilters()">Ver todos los espacios</button>
+        </div>
+      } @else {
+        <div class="results-grid">
+          @for (space of results; track space.id) {
+            <div class="parking-card" [routerLink]="['/parking', space.id]">
+              <div class="parking-card-image">
+                <div class="icon-placeholder">🅿️</div>
+                <div class="card-avail" [class.green]="space.available" [class.red]="!space.available">
+                  {{ space.available ? '✓ Disponible' : '✗ Lleno' }}
+                </div>
+              </div>
+              <div class="parking-card-body">
+                <div class="parking-card-title">{{ space.title }}</div>
+                <div class="parking-card-address">📍 {{ space.address }}, {{ space.district }}</div>
+                <div class="space-info-row">
+                  <span class="badge badge-info">{{ space.type }}</span>
+                  <span class="spots-info">
+                    <span [class.available-dot]="true" [class.green]="space.available" [class.red]="!space.available"></span>
+                    {{ space.availableSpots }}/{{ space.totalSpots }} lugares
+                  </span>
+                </div>
+                <div class="parking-card-meta">
+                  @for (f of space.features.slice(0,3); track f) {
+                    <span class="feature-tag">✓ {{ f }}</span>
+                  }
+                </div>
+                <div class="parking-card-footer">
+                  <div>
+                    <div class="price-tag">S/ {{ space.price }}<span>/hora</span></div>
+                    <div class="rating">
+                      <span class="stars">★</span>
+                      <span class="rating-number">{{ space.rating }}</span>
+                      <span class="rating-count">({{ space.reviews }})</span>
+                    </div>
+                  </div>
+                  <button class="btn btn-primary btn-sm" [disabled]="!space.available">
+                    {{ space.available ? 'Reservar' : 'No disponible' }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</div>

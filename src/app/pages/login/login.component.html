@@ -1,0 +1,35 @@
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <span>🅿</span>
+      <strong>ParkingApp V2</strong>
+    </div>
+    <h1>Iniciar sesión</h1>
+    <p class="auth-sub">Bienvenido de regreso. Ingresa tus credenciales.</p>
+
+    <div class="demo-btns">
+      <button class="demo-btn" (click)="fillDemo('conductor')">🚗 Demo Conductor</button>
+      <button class="demo-btn" (click)="fillDemo('propietario')">🏠 Demo Propietario</button>
+    </div>
+
+    @if (restoredFromCookie) {
+      <div class="alert alert-info">🍪 Recuperamos el correo que ingresaste la última vez.</div>
+    }
+    @if (error) { <div class="alert alert-error">{{ error }}</div> }
+
+    <div class="form-group">
+      <label class="form-label">Correo electrónico</label>
+      <input type="email" class="form-control" [(ngModel)]="email" (ngModelChange)="onFieldChange()" placeholder="tucorreo@ejemplo.com" (keyup.enter)="login()" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Contraseña</label>
+      <input type="password" class="form-control" [(ngModel)]="password" placeholder="••••••••" (keyup.enter)="login()" />
+    </div>
+
+    <button class="btn btn-primary btn-full btn-lg" (click)="login()" [disabled]="loading">
+      {{ loading ? 'Ingresando...' : 'Ingresar' }}
+    </button>
+
+    <p class="auth-link">¿No tienes cuenta? <a routerLink="/registro">Regístrate gratis</a></p>
+  </div>
+</div>
