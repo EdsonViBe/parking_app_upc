@@ -7,9 +7,12 @@
         <div class="success-icon">✅</div>
         <h2>¡Reserva confirmada!</h2>
         <p>Tu espacio en <strong>{{ space?.title }}</strong> ha sido reservado exitosamente.</p>
-        @if (notificationError) {
-          <div class="alert alert-error">{{ notificationError }}</div>
-        }
+       
+    <!--
+@if (notificationError) {
+  <div class="alert alert-error">{{ notificationError }}</div>
+}
+-->
         <div class="success-details">
           <div class="s-row"><span>📅 Fecha</span><strong>{{ form.date }}</strong></div>
           <div class="s-row"><span>🕐 Horario</span><strong>{{ form.startTime }} – {{ form.endTime }}</strong></div>

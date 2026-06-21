@@ -5,53 +5,64 @@
       <span class="hero-badge">🏙️ Lima, Perú</span>
       <h1>Encuentra estacionamiento<br><span class="highlight">seguro y rápido</span></h1>
       <p>Conectamos conductores con propietarios de cocheras privadas. Reserva en segundos, estaciona sin estrés.</p>
-      <div class="search-box">
-        <div class="search-input-wrapper">
-          <span class="search-icon">📍</span>
-          <input
-            type="text"
-            [(ngModel)]="searchQuery"
-            placeholder="¿Dónde necesitas estacionar? (ej: Miraflores, San Isidro...)"
-            class="search-input"
-            (keyup.enter)="search()"
-            (focus)="onSearchFocus()"
-            [readonly]="!isLoggedIn || isOwner"
-          />
-        </div>
-        <button class="btn btn-primary btn-lg" (click)="search()">Buscar</button>
-      </div>
-      @if (showLoginPrompt) {
-        <div class="login-prompt">
-          🔒 Debes iniciar sesión para buscar estacionamientos.
-          <a (click)="goToLogin()">Iniciar sesión</a> ·
-          <a routerLink="/registro">Crear cuenta</a>
-        </div>
-      }
-      @if (showOwnerBlockPrompt) {
-        <div class="login-prompt owner-prompt">
-          🏠 Tu cuenta es de <strong>propietario</strong>. La búsqueda de cocheras es exclusiva para conductores.
-          <a (click)="goToOwnerDashboard()">Ir a Mi Cochera</a>
-        </div>
-      }
-      <div class="quick-filters">
-        <span>Búsquedas populares:</span>
-        @if (isLoggedIn && !isOwner) {
-          <a routerLink="/buscar" [queryParams]="{q:'Miraflores'}">Miraflores</a>
-          <a routerLink="/buscar" [queryParams]="{q:'San Isidro'}">San Isidro</a>
-          <a routerLink="/buscar" [queryParams]="{q:'Barranco'}">Barranco</a>
-          <a routerLink="/buscar" [queryParams]="{q:'aeropuerto'}">Aeropuerto</a>
-        } @else if (isOwner) {
-          <a (click)="goToOwnerDashboard()">Miraflores</a>
-          <a (click)="goToOwnerDashboard()">San Isidro</a>
-          <a (click)="goToOwnerDashboard()">Barranco</a>
-          <a (click)="goToOwnerDashboard()">Aeropuerto</a>
-        } @else {
-          <a (click)="goToLogin()">Miraflores</a>
-          <a (click)="goToLogin()">San Isidro</a>
-          <a (click)="goToLogin()">Barranco</a>
-          <a (click)="goToLogin()">Aeropuerto</a>
-        }
-      </div>
+      @if (!isOwner) {
+  <div class="search-box">
+    <div class="search-input-wrapper">
+      <span class="search-icon">📍</span>
+
+      <input
+        type="text"
+        [(ngModel)]="searchQuery"
+        placeholder="¿Dónde necesitas estacionar? (ej: Miraflores, San Isidro...)"
+        class="search-input"
+        (keyup.enter)="search()"
+        (focus)="onSearchFocus()"
+        [readonly]="!isLoggedIn"
+      />
+    </div>
+
+    <button class="btn btn-primary btn-lg" (click)="search()">
+      Buscar
+    </button>
+  </div>
+
+  @if (showLoginPrompt) {
+    <div class="login-prompt">
+      🔒 Debes iniciar sesión para buscar estacionamientos.
+      <a (click)="goToLogin()">Iniciar sesión</a> ·
+      <a routerLink="/registro">Crear cuenta</a>
+    </div>
+  }
+
+  <div class="quick-filters">
+    <span>Búsquedas populares:</span>
+
+    @if (isLoggedIn) {
+      <a routerLink="/buscar" [queryParams]="{ q: 'Miraflores' }">Miraflores</a>
+      <a routerLink="/buscar" [queryParams]="{ q: 'San Isidro' }">San Isidro</a>
+      <a routerLink="/buscar" [queryParams]="{ q: 'Barranco' }">Barranco</a>
+      <a routerLink="/buscar" [queryParams]="{ q: 'Aeropuerto' }">Aeropuerto</a>
+    } @else {
+      <a (click)="goToLogin()">Miraflores</a>
+      <a (click)="goToLogin()">San Isidro</a>
+      <a (click)="goToLogin()">Barranco</a>
+      <a (click)="goToLogin()">Aeropuerto</a>
+    }
+  </div>
+} @else {
+  <div class="owner-home-panel">
+    <h3>Estás usando el modo propietario</h3>
+
+    <p>
+      Desde este modo puedes administrar tu cochera. Para buscar estacionamiento,
+      cambia a modo conductor desde Mi perfil.
+    </p>
+
+    <button type="button" class="btn btn-primary btn-lg" (click)="goToOwnerDashboard()">
+      Ir a Mi cochera
+    </button>
+  </div>
+}
     </div>
     <div class="hero-visual">
       <div class="map-preview">

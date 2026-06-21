@@ -47,4 +47,17 @@ export class ReservationService {
     this.reservations$.next(updated);
     return of(true);
   }
+
+  approve(reservationId: number): Observable<boolean> {
+  const updated = this.reservations$.value.map(r =>
+    r.id === reservationId ? { ...r, status: 'confirmada' as const } : r
+  );
+
+  this.reservations$.next(updated);
+  return of(true);
+}
+
+
+
+
 }
