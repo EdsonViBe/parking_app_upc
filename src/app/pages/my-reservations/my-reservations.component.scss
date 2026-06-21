@@ -15,9 +15,26 @@
 .res-details { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 .res-detail { display: flex; align-items: center; gap: 8px; font-size: 0.875rem; color: var(--gray-600); }
 .res-detail strong { color: var(--gray-800); }
-.res-actions { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--gray-100); }
+.res-actions { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--gray-100); display: flex; gap: 10px; flex-wrap: wrap; }
+.review-box {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--gray-100);
+  display: grid;
+  gap: 10px;
+}
+.review-box textarea { resize: vertical; }
 .empty-state { text-align: center; padding: 60px 20px; }
 .empty-state span { font-size: 3.5rem; display: block; margin-bottom: 16px; }
 .empty-state h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; }
 .empty-state p { color: var(--gray-500); margin-bottom: 20px; }
-@media (max-width: 600px) { .res-details { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 600px) {
+  .page-header { padding: 24px 0; margin-bottom: 20px; }
+  .tabs { overflow-x: auto; }
+  .tabs button { flex: 1; padding: 10px 12px; }
+  .reservation-card { padding: 16px; border-radius: var(--radius-lg); }
+  .res-header { align-items: flex-start; }
+  .res-header .badge { margin-left: auto; }
+  .res-details { grid-template-columns: 1fr 1fr; }
+  .res-actions .btn { flex: 1; }
+}

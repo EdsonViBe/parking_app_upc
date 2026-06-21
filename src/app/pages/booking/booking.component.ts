@@ -6,11 +6,13 @@ import { ParkingService } from '../../services/parking.service';
 import { AuthService } from '../../services/auth.service';
 import { ReservationService } from '../../services/reservation.service';
 import { FormPersistenceService } from '../../services/form-persistence.service';
+import { NotificationService } from '../../services/notification.service';
 import { ParkingSpace, User } from '../../models/parking.model';
 
 interface BookingFormData {
   date: string; startTime: string; endTime: string;
   vehiclePlate: string; vehicleType: string; paymentMethod: string;
+  cardNumber: string; cardName: string; cardExpiry: string; cardCvv: string;
 }
 
 @Component({
@@ -25,12 +27,14 @@ export class BookingComponent implements OnInit {
   loading = false;
   submitted = false;
   error = '';
+  notificationError = '';
   currentUser: User | null = null;
   restoredFromCookie = false;
 
   form: BookingFormData = {
     date: '', startTime: '09:00', endTime: '11:00',
-    vehiclePlate: '', vehicleType: 'auto', paymentMethod: 'tarjeta'
+    vehiclePlate: '', vehicleType: 'auto', paymentMethod: 'tarjeta',
+    cardNumber: '', cardName: '', cardExpiry: '', cardCvv: ''
   };
 
   private formKey = '';
@@ -51,13 +55,26 @@ export class BookingComponent implements OnInit {
     return new Date().toISOString().split('T')[0];
   }
 
+  get isCardPayment(): boolean {
+    return this.form.paymentMethod === 'tarjeta' || this.form.paymentMethod === 'tarjeta_rechazada';
+  }
+
+  get cardBrand(): string {
+    const clean = this.form.cardNumber.replace(/\D/g, '');
+    if (clean.startsWith('4')) return 'Visa';
+    if (/^5[1-5]/.test(clean)) return 'Mastercard';
+    if (/^3[47]/.test(clean)) return 'Amex';
+    return 'Tarjeta';
+  }
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private parkingService: ParkingService,
     private authService: AuthService,
     private reservationService: ReservationService,
-    private formPersistence: FormPersistenceService
+    private formPersistence: FormPersistenceService,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -78,11 +95,36 @@ export class BookingComponent implements OnInit {
   }
 
   onFieldChange(): void {
-    this.formPersistence.save<BookingFormData>(this.formKey, this.form);
+    const { cardNumber, cardCvv, ...safeForm } = this.form;
+    this.formPersistence.save(this.formKey, { ...safeForm, cardNumber: '', cardCvv: '' });
+  }
+
+  onCardNumberChange(value: string): void {
+    const clean = value.replace(/\D/g, '').slice(0, 16);
+    this.form.cardNumber = clean.replace(/(.{4})/g, '$1 ').trim();
+    this.onFieldChange();
+  }
+
+  onExpiryChange(value: string): void {
+    const clean = value.replace(/\D/g, '').slice(0, 4);
+    this.form.cardExpiry = clean.length > 2 ? `${clean.slice(0, 2)}/${clean.slice(2)}` : clean;
+    this.onFieldChange();
+  }
+
+  onCvvChange(value: string): void {
+    this.form.cardCvv = value.replace(/\D/g, '').slice(0, 4);
   }
 
   confirm(): void {
     if (!this.authService.isLoggedIn()) { this.router.navigate(['/login']); return; }
+    if (this.isCardPayment && !this.isCardFormValid()) {
+      this.error = 'Completa los datos de la tarjeta antes de continuar.';
+      return;
+    }
+    if (this.form.paymentMethod === 'tarjeta_rechazada') {
+      this.error = 'El método de pago fue rechazado. Elige otro método de pago para continuar.';
+      return;
+    }
     if (!this.form.date || this.hours <= 0 || !this.form.vehiclePlate) {
       this.error = 'Por favor completa todos los campos correctamente.';
       return;
@@ -102,9 +144,22 @@ export class BookingComponent implements OnInit {
       vehiclePlate: this.form.vehiclePlate,
       vehicleType: this.form.vehicleType
     }).subscribe(() => {
-      this.loading = false;
-      this.submitted = true;
-      this.formPersistence.clear(this.formKey);
+      this.notificationService.notifyReservationConfirmed().subscribe(result => {
+        this.loading = false;
+        this.submitted = true;
+        this.formPersistence.clear(this.formKey);
+        if (!result.success) {
+          this.notificationError = `No pudimos enviar la notificación. Registramos el incidente #${result.incidentId} y reintentaremos el envío posteriormente.`;
+        }
+      });
     });
+  }
+
+  private isCardFormValid(): boolean {
+    const digits = this.form.cardNumber.replace(/\D/g, '');
+    return digits.length >= 13 &&
+      this.form.cardName.trim().length >= 3 &&
+      /^(0[1-9]|1[0-2])\/\d{2}$/.test(this.form.cardExpiry) &&
+      /^\d{3,4}$/.test(this.form.cardCvv);
   }
 }

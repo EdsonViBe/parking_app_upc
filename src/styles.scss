@@ -36,6 +36,7 @@ body {
   color: var(--gray-800);
   background: var(--gray-50);
   line-height: 1.5;
+  min-height: 100vh;
 }
 
 a { text-decoration: none; color: inherit; }
@@ -141,6 +142,38 @@ a { text-decoration: none; color: inherit; }
 
 @media (max-width: 1024px) { .grid-3 { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 640px) { .grid-3, .grid-2 { grid-template-columns: 1fr; } }
+
+@media (max-width: 640px) {
+  body { background: var(--white); }
+  .container { padding: 0 16px; }
+  .section { padding: 32px 0; }
+  .section-title { font-size: 1.35rem; }
+  .btn {
+    min-height: 44px;
+    padding: 10px 16px;
+  }
+  .btn-lg {
+    padding: 12px 18px;
+    font-size: 0.95rem;
+  }
+  .card,
+  .parking-card {
+    border-radius: var(--radius-lg);
+    box-shadow: 0 1px 0 rgba(17, 24, 39, 0.08);
+    border: 1px solid var(--gray-100);
+  }
+  .parking-card:hover {
+    transform: none;
+    box-shadow: var(--shadow);
+  }
+  .parking-card-image { height: 132px; }
+  .parking-card-footer {
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .price-tag { font-size: 1.1rem; }
+  .alert { font-size: 0.82rem; }
+}
 
 /* Disponibilidad */
 .available-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }

@@ -7,6 +7,10 @@
   </div>
 
   <div class="container">
+    @if (navigationError) {
+      <div class="alert alert-error">{{ navigationError }}</div>
+    }
+
     <div class="tabs">
       @for (tab of ['todas','activas','historial']; track tab) {
         <button [class.active]="activeTab === tab" (click)="activeTab = $any(tab)">
@@ -44,7 +48,33 @@
             </div>
             @if (r.status === 'confirmada' || r.status === 'pendiente') {
               <div class="res-actions">
+                @if (r.status === 'confirmada') {
+                  <button class="btn btn-secondary btn-sm" (click)="openDirections(r)">Cómo llegar</button>
+                }
                 <button class="btn btn-danger btn-sm" (click)="cancel(r.id)">Cancelar reserva</button>
+              </div>
+            }
+            @if (r.status === 'completada') {
+              <div class="review-box">
+                @if (savedReviews[r.id]) {
+                  <div class="alert alert-success">
+                    Valoración guardada: {{ savedReviews[r.id].rating }}/5 · {{ savedReviews[r.id].comment }}
+                  </div>
+                } @else {
+                  <label class="form-label">Califica tu experiencia</label>
+                  <select class="form-control" [ngModel]="getReviewForm(r.id).rating" (ngModelChange)="getReviewForm(r.id).rating = $event">
+                    <option [ngValue]="5">5 - Excelente</option>
+                    <option [ngValue]="4">4 - Muy buena</option>
+                    <option [ngValue]="3">3 - Buena</option>
+                    <option [ngValue]="2">2 - Regular</option>
+                    <option [ngValue]="1">1 - Mala</option>
+                  </select>
+                  <textarea class="form-control" rows="2" placeholder="Cuéntanos cómo fue tu reserva" [ngModel]="getReviewForm(r.id).comment" (ngModelChange)="getReviewForm(r.id).comment = $event"></textarea>
+                  @if (reviewErrors[r.id]) {
+                    <div class="form-error">{{ reviewErrors[r.id] }}</div>
+                  }
+                  <button class="btn btn-primary btn-sm" (click)="saveReview(r)">Enviar valoración</button>
+                }
               </div>
             }
           </div>

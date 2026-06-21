@@ -23,6 +23,7 @@ export class OwnerDashboardComponent implements OnInit {
   showAddForm = false;
   accessDeniedRole: string | null = null;
   restoredFromCookie = false;
+  formError = '';
 
   newSpace: NewSpaceFormData = {
     title: '', address: '', district: 'Miraflores', price: 5, type: 'cubierto',
@@ -67,6 +68,12 @@ export class OwnerDashboardComponent implements OnInit {
   }
 
   addSpace(): void {
+    if (!this.areHoursValid()) {
+      this.formError = 'Los horarios son inconsistentes o inválidos. Corrige la apertura y el cierre antes de publicar.';
+      return;
+    }
+
+    this.formError = '';
     alert('✅ Espacio registrado exitosamente (demo). En producción se guardaría en la base de datos.');
     this.showAddForm = false;
     this.formPersistence.clear(this.FORM_KEY);
@@ -75,5 +82,14 @@ export class OwnerDashboardComponent implements OnInit {
       title: '', address: '', district: 'Miraflores', price: 5, type: 'cubierto',
       totalSpots: 1, description: '', openTime: '08:00', closeTime: '20:00'
     };
+  }
+
+  private areHoursValid(): boolean {
+    if (!this.newSpace.openTime || !this.newSpace.closeTime) return false;
+    const [openHour, openMinute] = this.newSpace.openTime.split(':').map(Number);
+    const [closeHour, closeMinute] = this.newSpace.closeTime.split(':').map(Number);
+    const open = openHour * 60 + openMinute;
+    const close = closeHour * 60 + closeMinute;
+    return Number.isFinite(open) && Number.isFinite(close) && close > open;
   }
 }

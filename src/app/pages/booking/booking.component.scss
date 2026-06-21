@@ -11,6 +11,47 @@
 .payment-option { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border: 2px solid var(--gray-200); border-radius: var(--radius); cursor: pointer; font-size: 0.9rem; transition: var(--transition); }
 .payment-option.selected { border-color: var(--primary); background: var(--primary-light); color: var(--primary); font-weight: 600; }
 .payment-option input { accent-color: var(--primary); }
+.card-payment-panel {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--gray-100);
+  display: grid;
+  gap: 14px;
+}
+.card-preview {
+  min-height: 142px;
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  background: linear-gradient(135deg, #111827, #2563eb);
+  color: var(--white);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: var(--shadow);
+}
+.card-preview span {
+  align-self: flex-end;
+  font-size: 0.8rem;
+  font-weight: 700;
+  opacity: 0.9;
+}
+.card-preview strong {
+  font-size: 1.1rem;
+  letter-spacing: 0.08em;
+}
+.card-preview small {
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+.card-fields-row {
+  display: grid;
+  grid-template-columns: 1fr 120px;
+  gap: 12px;
+}
+.card-note {
+  color: var(--gray-500);
+  font-size: 0.78rem;
+}
 .summary-card { background: white; border-radius: var(--radius-xl); padding: 24px; box-shadow: var(--shadow-lg); position: sticky; top: 80px; }
 .summary-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 16px; }
 .summary-parking { display: flex; gap: 12px; align-items: flex-start; padding: 12px; background: var(--gray-50); border-radius: var(--radius); margin-bottom: 20px; }
@@ -32,4 +73,35 @@
 @media (max-width: 900px) {
   .booking-grid { grid-template-columns: 1fr; }
   .summary-card { position: static; }
+}
+
+@media (max-width: 640px) {
+  .booking-page { padding: 20px 0 32px; }
+  .back-link { margin-bottom: 16px; }
+  .booking-form h1 { font-size: 1.3rem; margin-bottom: 16px; }
+  .form-section,
+  .summary-card,
+  .success-details {
+    border-radius: var(--radius-lg);
+    padding: 16px;
+    box-shadow: none;
+    border: 1px solid var(--gray-100);
+  }
+  .time-row { grid-template-columns: 1fr; gap: 0; }
+  .card-preview { min-height: 124px; }
+  .card-fields-row { grid-template-columns: 1fr 1fr; }
+  .payment-option { min-height: 48px; }
+  .booking-summary {
+    position: sticky;
+    bottom: 0;
+    margin: 0 -16px;
+    background: var(--white);
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--gray-100);
+  }
+  .summary-card { border: 0; padding: 0; }
+  .summary-parking { display: none; }
+  .success-screen { margin: 28px auto; }
+  .success-icon { font-size: 3.5rem; }
+  .success-actions { flex-direction: column; }
 }

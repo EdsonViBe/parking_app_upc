@@ -49,6 +49,9 @@
             @if (restoredFromCookie) {
               <div class="alert alert-info">🍪 Recuperamos los datos de tu espacio que estabas registrando.</div>
             }
+            @if (formError) {
+              <div class="alert alert-error">{{ formError }}</div>
+            }
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label">Nombre del espacio</label>
